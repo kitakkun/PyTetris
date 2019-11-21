@@ -74,8 +74,7 @@ class Block:
     # make a new block
     def make(self):
         self.clear()
-        # type = random.randint(0, 6)
-        type = 1
+        type = random.randint(0, 6)
         if type is 0:
             self.block = copy.deepcopy(self.SQUARE_BLOCK)
         elif type is 1:
