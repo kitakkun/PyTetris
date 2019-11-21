@@ -1,4 +1,4 @@
-import random, copy
+import random, copy, numpy
 
 class Block:
 
@@ -74,7 +74,8 @@ class Block:
     # make a new block
     def make(self):
         self.clear()
-        type = random.randint(0, 6)
+        # type = random.randint(0, 6)
+        type = 1
         if type is 0:
             self.block = copy.deepcopy(self.SQUARE_BLOCK)
         elif type is 1:
@@ -90,9 +91,15 @@ class Block:
         elif type is 6:
             self.block = copy.deepcopy(self.UNEVEN_BLOCK)
         print(self.block)
+        self.rotate()
+        print(self.block)
 
     def rotate(self):
-        pass
+        tmp = numpy.array(self.block)
+        for _ in range(3):
+            tmp = numpy.rot90(tmp)
+        tmp = tmp.tolist()
+        self.block = copy.deepcopy(tmp)
 
     # reset block
     def clear(self):
