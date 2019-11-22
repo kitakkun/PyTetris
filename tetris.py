@@ -20,30 +20,61 @@ class Tetris:
         while (True):
             self.draw()
             pygame.display.update()
+            self.block.y += 0.001
+            # key input
+            pressed_keys = pygame.key.get_pressed()
+            if pressed_keys[K_LEFT]:
+                self.block.x -= 0.02
+            if pressed_keys[K_RIGHT]:
+                self.block.x += 0.02
+            if pressed_keys[K_UP]:
+                self.block.y -= 0.02
+            if pressed_keys[K_DOWN]:
+                self.block.y += 0.02
             for event in pygame.event.get():
                 if event.type == QUIT:
                     pygame.quit()
                     sys.exit()
-                elif event.type == KEYDOWN:
-                    print("keydown")
-                    if event.key == K_ESCAPE:
-                        pygame.quit()
-                        sys.exit()
-                    if event.key == K_LEFT:
-                        self.block.x -= 1
-                    if event.key == K_RIGHT:
-                        self.block.x += 1
-                    if event.key == K_DOWN:
-                        self.block.y += 1
-                    if event.key == K_UP:
-                        self.block.y -= 1
+                if event.type == KEYDOWN:
+                    if event.key == K_SPACE:
+                        self.block.rotate()
+            self.check_block()
 
 
     def stop(self):
         pass
 
+    # prevent blocks from going away from game field.
     def check_block(self):
-        pass
+        # i: vertical(y)
+        # j: horizontal(x)
+        max_i = 0
+        max_j = 0
+        min_i = 4
+        min_j = 4
+        for i in range(5):
+            for j in range(5):
+                val = self.block.block[i][j]
+                if val != 0:
+                    if j <= min_j:
+                        min_j = j
+                    if i <= min_i:
+                        min_i = i
+                    if j >= max_j:
+                        max_j = j
+                    if i >= max_i:
+                        max_i = i
+        # check left wall and ground
+        tmp_x = self.block.x + min_j + 1
+        tmp_y = self.block.y + max_i + 1
+        if tmp_x <= 1:
+            self.block.x = -min_j
+        if tmp_y >= self.board.v - 1:
+            self.block.y = self.board.v - 2 - max_i
+        # check right wall
+        tmp_x = self.block.x + max_j + 1
+        if tmp_x >= self.board.h - 2:
+            self.block.x = self.board.h - 3 - max_j
 
 
     def draw(self):
