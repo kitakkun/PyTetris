@@ -21,13 +21,30 @@ class Tetris:
             self.draw()
             pygame.display.update()
             for event in pygame.event.get():
-                if event.type is QUIT:
+                if event.type == QUIT:
                     pygame.quit()
                     sys.exit()
+                elif event.type == KEYDOWN:
+                    print("keydown")
+                    if event.key == K_ESCAPE:
+                        pygame.quit()
+                        sys.exit()
+                    if event.key == K_LEFT:
+                        self.block.x -= 1
+                    if event.key == K_RIGHT:
+                        self.block.x += 1
+                    if event.key == K_DOWN:
+                        self.block.y += 1
+                    if event.key == K_UP:
+                        self.block.y -= 1
 
 
     def stop(self):
         pass
+
+    def check_block(self):
+        pass
+
 
     def draw(self):
         block_side_length = 30
@@ -38,24 +55,28 @@ class Tetris:
         for i in range(self.board.v):
             for j in range(self.board.h):
                 val = self.board.board[i][j]
-                if val is 1:
+                if val == 1:
                     pygame.draw.rect(self.screen, (255, 255, 255), Rect(block_side_length * j + startX, block_side_length * i + startY, block_side_length, block_side_length))
                     pygame.draw.rect(self.screen, (0, 0, 0), Rect(block_side_length * j + startX, block_side_length * i + startY, block_side_length, block_side_length), 2)
         # draw block
-        pygame.draw.rect(self.screen, (255, 255, 255), Rect(
-                block_side_length * (self.block.x + 1) + startX,
-                block_side_length * self.block.y + startY,
-                block_side_length,
-                block_side_length
-            )
-        )
-        pygame.draw.rect(self.screen, (0, 0, 0), Rect(
-                block_side_length * (self.block.x + 1) + startX,
-                block_side_length * self.block.y + startY,
-                block_side_length,
-                block_side_length
-            )
-        , 2)
+        for i in range(5):
+            for j in range(5):
+                val = self.block.block[i][j]
+                if val != 0:
+                    pygame.draw.rect(self.screen, (255, 255, 255), Rect(
+                            block_side_length * (self.block.x + 1 + j) + startX,
+                            block_side_length * (self.block.y + i) + startY,
+                            block_side_length,
+                            block_side_length
+                        )
+                    )
+                    pygame.draw.rect(self.screen, (0, 0, 0), Rect(
+                            block_side_length * (self.block.x + 1 + j) + startX,
+                            block_side_length * (self.block.y + i) + startY,
+                            block_side_length,
+                            block_side_length
+                        )
+                    , 2)
 
 def main():
     tetris = Tetris()
