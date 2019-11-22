@@ -34,13 +34,28 @@ class Tetris:
         startX = 40
         startY = 40
         self.screen.fill((0, 0, 0))
+        # draw board
         for i in range(self.board.v):
             for j in range(self.board.h):
                 val = self.board.board[i][j]
                 if val is 1:
                     pygame.draw.rect(self.screen, (255, 255, 255), Rect(block_side_length * j + startX, block_side_length * i + startY, block_side_length, block_side_length))
                     pygame.draw.rect(self.screen, (0, 0, 0), Rect(block_side_length * j + startX, block_side_length * i + startY, block_side_length, block_side_length), 2)
-
+        # draw block
+        pygame.draw.rect(self.screen, (255, 255, 255), Rect(
+                block_side_length * (self.block.x + 1) + startX,
+                block_side_length * self.block.y + startY,
+                block_side_length,
+                block_side_length
+            )
+        )
+        pygame.draw.rect(self.screen, (0, 0, 0), Rect(
+                block_side_length * (self.block.x + 1) + startX,
+                block_side_length * self.block.y + startY,
+                block_side_length,
+                block_side_length
+            )
+        , 2)
 
 def main():
     tetris = Tetris()
