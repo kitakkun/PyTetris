@@ -94,20 +94,20 @@ class Block:
         # determine the block's color
         color = random.randint(2, 6)
         tmp = tmp * color
-        # assign value into self.block
-        self.block = copy.deepcopy(tmp.tolist())
+        # assign value into self.map
+        self.map = copy.deepcopy(tmp.tolist())
         # rotate block some times
         rotate = random.randint(0, 3)
         for _ in range(rotate):
             self.rotate()
 
     def rotate(self):
-        tmp = numpy.array(self.block)
+        tmp = numpy.array(self.map)
         for _ in range(3):
             tmp = numpy.rot90(tmp)
         tmp = tmp.tolist()
-        self.block = copy.deepcopy(tmp)
+        self.map = copy.deepcopy(tmp)
 
     # reset block
     def clear(self):
-        self.block = copy.deepcopy(self.EMPTY_BLOCK)
+        self.map = copy.deepcopy(self.EMPTY_BLOCK)

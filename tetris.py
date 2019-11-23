@@ -44,6 +44,10 @@ class Tetris:
     def stop(self):
         pass
 
+    def get_block_real_pos(self):
+        pass
+
+
     # prevent blocks from going away from game field.
     def check_block(self):
         # i: vertical(y)
@@ -54,7 +58,7 @@ class Tetris:
         min_j = 4
         for i in range(5):
             for j in range(5):
-                val = self.block.block[i][j]
+                val = self.block.map[i][j]
                 if val != 0:
                     if j <= min_j:
                         min_j = j
@@ -76,6 +80,10 @@ class Tetris:
         if tmp_x >= self.board.h - 2:
             self.block.x = self.board.h - 3 - max_j
 
+    # write block positon into board. then make a new block
+    def finalize_block(self):
+        pass
+
 
     def draw(self):
         block_side_length = 30
@@ -85,14 +93,14 @@ class Tetris:
         # draw board
         for i in range(self.board.v):
             for j in range(self.board.h):
-                val = self.board.board[i][j]
+                val = self.board.map[i][j]
                 if val == 1:
                     pygame.draw.rect(self.screen, (255, 255, 255), Rect(block_side_length * j + startX, block_side_length * i + startY, block_side_length, block_side_length))
                     pygame.draw.rect(self.screen, (0, 0, 0), Rect(block_side_length * j + startX, block_side_length * i + startY, block_side_length, block_side_length), 2)
         # draw block
         for i in range(5):
             for j in range(5):
-                val = self.block.block[i][j]
+                val = self.block.map[i][j]
                 if val != 0:
                     pygame.draw.rect(self.screen, (255, 255, 255), Rect(
                             block_side_length * (self.block.x + 1 + j) + startX,
