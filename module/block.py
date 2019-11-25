@@ -66,19 +66,19 @@ class Block:
         [0, 0, 0, 0, 0]
     ])
 
-
-
     def __init__(self):
-        self.x = 0
+        self.x = 4
         self.y = 0
         self.make()
 
     # make a new block
     def make(self):
         self.clear()
+        self.can_rotate = True
         type = random.randint(0, 6)
         if type is 0:
             tmp = self.SQUARE_BLOCK
+            self.can_rotate = False
         elif type is 1:
             tmp = self.BAR_BLOCK
         elif type is 2:
@@ -102,11 +102,12 @@ class Block:
             self.rotate()
 
     def rotate(self):
-        tmp = numpy.array(self.map)
-        for _ in range(3):
-            tmp = numpy.rot90(tmp)
-        tmp = tmp.tolist()
-        self.map = copy.deepcopy(tmp)
+        if self.can_rotate:
+            tmp = numpy.array(self.map)
+            for _ in range(3):
+                tmp = numpy.rot90(tmp)
+            tmp = tmp.tolist()
+            self.map = copy.deepcopy(tmp)
 
     # reset block
     def clear(self):

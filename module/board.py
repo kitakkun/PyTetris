@@ -2,7 +2,7 @@ import copy
 
 class Board:
 
-    def __init__(self, h=14, v=21):
+    def __init__(self, h=12, v=21):
         self.h = h
         self.v = v
         self.map = [[0 for _ in range(h)] for _ in range(v)]
