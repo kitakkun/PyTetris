@@ -74,6 +74,8 @@ class Block:
     # make a new block
     def make(self):
         self.clear()
+        self.x = 4
+        self.y = 0
         self.can_rotate = True
         type = random.randint(0, 6)
         if type is 0:
@@ -92,7 +94,7 @@ class Block:
         elif type is 6:
             tmp = self.UNEVEN_BLOCK
         # determine the block's color
-        color = random.randint(2, 6)
+        color = random.randint(2, 5)
         tmp = tmp * color
         # assign value into self.map
         self.map = copy.deepcopy(tmp.tolist())
