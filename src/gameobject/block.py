@@ -105,11 +105,14 @@ class Block:
 
     def rotate(self):
         if self.can_rotate:
-            tmp = numpy.array(self.map)
-            for _ in range(3):
-                tmp = numpy.rot90(tmp)
-            tmp = tmp.tolist()
-            self.map = copy.deepcopy(tmp)
+            self.map = self.get_rotated_map()
+
+    def get_rotated_map(self):
+        tmp = numpy.array(self.map)
+        for _ in range(3):
+            tmp = numpy.rot90(tmp)
+        tmp = tmp.tolist()
+        return tmp
 
     # reset block
     def clear(self):

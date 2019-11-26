@@ -1,5 +1,5 @@
-from module.board import Board
-from module.block import Block
+from gameobject.board import Board
+from gameobject.block import Block
 import sys
 import pygame
 import copy
@@ -27,7 +27,6 @@ class Tetris:
             if self.can_move_down or self.block.y <= round(self.block.y):
                 self.block.y += 0.001
             else:
-                # self.block.y = round(self.block.y)
                 self.finalize_block()
             # key input
             pressed_keys = pygame.key.get_pressed()
@@ -60,6 +59,13 @@ class Tetris:
             for y in range(5):
                 val = self.block.map[y][x]
                 if val != 0:
+                    left_x = self.block.x + x - 1
+                    right_x = self.block.x + x + 1
+                    bottom_y = math.floor(self.block.y) + y + 1
+                    if left_x <= 0:
+                        self.block.x = 1 - x
+                    if right_x >= self.board.h - 1:
+                        self.block.x = self.board.h - 2 - x
                     left = self.board.map[math.floor(self.block.y) + y][self.block.x + x - 1]
                     right = self.board.map[math.floor(self.block.y) + y][self.block.x + x + 1]
                     top = self.board.map[math.floor(self.block.y) + y - 1][self.block.x + x]
