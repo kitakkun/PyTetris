@@ -94,7 +94,7 @@ class Block:
         elif type is 6:
             tmp = self.UNEVEN_BLOCK
         # determine the block's color
-        color = random.randint(2, 5)
+        color = random.randint(2, 6)
         tmp = tmp * color
         # assign value into self.map
         self.map = copy.deepcopy(tmp.tolist())

@@ -5,6 +5,7 @@ import pygame
 import copy
 from pygame.locals import *
 import math
+import simpleaudio
 
 class Tetris:
 
@@ -12,6 +13,17 @@ class Tetris:
     can_move_left = True
     can_move_right = True
     can_move_down = True
+
+    blue_block = pygame.image.load("./image/block/blue.jpeg")
+    red_block = pygame.image.load("./image/block/red.jpeg")
+    purple_block = pygame.image.load("./image/block/purple.jpeg")
+    orange_block = pygame.image.load("./image/block/orange.jpeg")
+    magenta_block = pygame.image.load("./image/block/magenta.jpeg")
+    green_block = pygame.image.load("./image/block/green.jpeg")
+    gray_block = pygame.image.load("./image/block/gray.jpeg")
+
+    finalized_sound_path = "./sound/block.wav"
+    clearline_sound_path = "./sound/clearline.wav"
 
     def __init__(self):
         self.board = Board()
@@ -25,13 +37,15 @@ class Tetris:
             self.draw()
             pygame.display.update()
             if self.can_move_down or self.block.y <= round(self.block.y):
-                self.block.y += 0.001
+                self.block.y += 0.003
             else:
+                sound = pygame.mixer.Sound(self.finalized_sound_path)
+                sound.play()
                 self.finalize_block()
             # key input
             pressed_keys = pygame.key.get_pressed()
             if pressed_keys[K_DOWN] and self.can_move_down:
-                self.block.y += 0.02
+                self.block.y += 0.05
             for event in pygame.event.get():
                 if event.type == QUIT:
                     pygame.quit()
@@ -44,7 +58,11 @@ class Tetris:
                     if event.key == K_RIGHT and self.can_move_right:
                         self.block.x += 1
             self.check_block()
-            self.board.clear_line(self.board.get_full_lines())
+            full_lines = self.board.get_full_lines()
+            if len(full_lines) > 0:
+                sound = pygame.mixer.Sound(self.clearline_sound_path)
+                sound.play()
+                self.board.clear_line(full_lines)
 
 
     def stop(self):
@@ -93,38 +111,25 @@ class Tetris:
             for j in range(self.board.h):
                 val = self.board.map[i][j]
                 if val != 0:
-                    if val == 1:
-                        color = pygame.color.Color(255, 255, 255)
-                    if val == 2:
-                        color = pygame.color.Color(100, 150, 100)
-                    elif val == 3:
-                        color = pygame.color.Color(255, 100, 100)
-                    elif val == 4:
-                        color = pygame.color.Color(100, 255, 100)
-                    elif val == 5:
-                        color = pygame.color.Color(100, 100, 255)
-                    else:
-                        color = pygame.color.Color(255, 255, 255)
-                    pygame.draw.rect(self.screen, color, Rect(block_side_length * j + startX, block_side_length * i + startY, block_side_length, block_side_length))
+                    if val == 1: image = self.gray_block
+                    elif val == 2: image = self.red_block
+                    elif val == 3: image = self.green_block
+                    elif val == 4: image = self.magenta_block
+                    elif val == 5: image = self.purple_block
+                    elif val == 6: image = self.blue_block
+                    self.screen.blit(image, (block_side_length * j + startX, block_side_length * i + startY))
                     pygame.draw.rect(self.screen, (0, 0, 0), Rect(block_side_length * j + startX, block_side_length * i + startY, block_side_length, block_side_length), 2)
         # draw block
         for i in range(5):
             for j in range(5):
                 val = self.block.map[i][j]
                 if val != 0:
-                    if val == 2:
-                        color = pygame.color.Color(100, 150, 100)
-                    elif val == 3:
-                        color = pygame.color.Color(255, 100, 100)
-                    elif val == 4:
-                        color = pygame.color.Color(100, 255, 100)
-                    elif val == 5:
-                        color = pygame.color.Color(100, 100, 255)
-                    else:
-                        color = pygame.color.Color(255, 255, 255)
-                    pygame.draw.rect(self.screen, color, Rect(
-                            block_side_length * (self.block.x + j) + startX,
-                            block_side_length * (self.block.y + i) + startY,
+                    if val == 2: image = self.red_block
+                    elif val == 3: image = self.green_block
+                    elif val == 4: image = self.magenta_block
+                    elif val == 5: image = self.purple_block
+                    elif val == 6: image = self.blue_block
+                    self.screen.blit(image, (block_side_length * (self.block.x + j) + startX,block_side_length * (self.block.y + i) + startY,
                             block_side_length,
                             block_side_length
                         )
