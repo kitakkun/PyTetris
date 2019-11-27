@@ -53,6 +53,16 @@ class Tetris:
                 if event.type == KEYDOWN:
                     if event.key == K_SPACE:
                         self.block.rotate()
+                        for x in range(5):
+                            for y in range(5):
+                                b_x = self.block.x + x
+                                b_y = round(self.block.y) + y
+                                if 0 < self.block.x + x < self.board.h - 1:
+                                    val = self.board.map[b_y][b_x]
+                                    if val != 0:
+                                        self.block.rotate()
+                                        self.block.rotate()
+                                        self.block.rotate()
                     if event.key == K_LEFT and self.can_move_left:
                         self.block.x -= 1
                     if event.key == K_RIGHT and self.can_move_right:
