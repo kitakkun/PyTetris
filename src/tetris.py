@@ -22,8 +22,21 @@ class Tetris:
     green_block = pg.image.load("./image/block/green.jpeg")
     gray_block = pg.image.load("./image/block/gray.jpeg")
 
+    letter_zero = pg.image.load('./image/letter/zero.png')
+    letter_one = pg.image.load('./image/letter/one.png')
+    letter_two = pg.image.load('./image/letter/two.png')
+    letter_three = pg.image.load('./image/letter/three.png')
+    letter_four = pg.image.load('./image/letter/four.png')
+    letter_five = pg.image.load('./image/letter/five.png')
+    letter_six = pg.image.load('./image/letter/six.png')
+    letter_seven = pg.image.load('./image/letter/seven.png')
+    letter_eight = pg.image.load('./image/letter/eight.png')
+    letter_nine = pg.image.load('./image/letter/nine.png')
+
     finalized_sound_path = "./sound/block.wav"
     clearline_sound_path = "./sound/clearline.wav"
+
+    score = 0
 
     def __init__(self):
         self.board = Board()
@@ -70,6 +83,8 @@ class Tetris:
             self.check_block()
             full_lines = self.board.get_full_lines()
             if len(full_lines) > 0:
+                self.score += pow(2, len(full_lines)) * 100
+                print(self.score)
                 sound = pg.mixer.Sound(self.clearline_sound_path)
                 sound.play()
                 self.board.clear_line(full_lines)
@@ -115,6 +130,33 @@ class Tetris:
         startX = 40
         startY = 40
         self.screen.fill((0, 0, 0))
+        # draw score
+        score = list(str(self.score))
+        pg.draw.rect(self.screen, (0, 0, 0), Rect(500, 80, 30 * len(score), 30))
+        i = 0
+        for c in score:
+            if c == "0":
+                image = self.letter_zero
+            elif c == "1":
+                image = self.letter_one
+            elif c == "2":
+                image = self.letter_two
+            elif c == "3":
+                image = self.letter_three
+            elif c == "4":
+                image = self.letter_four
+            elif c == "5":
+                image = self.letter_five
+            elif c == "6":
+                image = self.letter_six
+            elif c == "7":
+                image = self.letter_seven
+            elif c == "8":
+                image = self.letter_eight
+            elif c == "9":
+                image = self.letter_nine
+            self.screen.blit(image, (500 + i * 30, 80))
+            i += 1
         # draw board
         for i in range(self.board.v):
             for j in range(self.board.h):
@@ -150,35 +192,6 @@ class Tetris:
                             block_side_length
                         )
                     , 2)
-
-        # draw block(debug)
-        startX = 500
-        for i in range(5):
-            for j in range(5):
-                val = self.block.map[i][j]
-                if val != 0:
-                    pg.draw.rect(self.screen, (255, 255, 255), Rect(
-                            block_side_length * j + startX,
-                            block_side_length * i + startY,
-                            block_side_length,
-                            block_side_length
-                        )
-                    )
-                elif val == 0:
-                    pg.draw.rect(self.screen, (100, 100, 100), Rect(
-                            block_side_length * j + startX,
-                            block_side_length * i + startY,
-                            block_side_length,
-                            block_side_length
-                        )
-                    )
-                pg.draw.rect(self.screen, (0, 0, 0), Rect(
-                        block_side_length * j + startX,
-                        block_side_length * i + startY,
-                        block_side_length,
-                        block_side_length
-                    )
-                , 2)
 
 
 def main():
