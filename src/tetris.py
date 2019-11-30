@@ -1,8 +1,8 @@
 from gameobject.board import Board
 from gameobject.block import Block
 import sys
-import pygame
-import copy
+import pygame as pg
+import copy as cp
 from pygame.locals import *
 import math
 import simpleaudio
@@ -14,13 +14,13 @@ class Tetris:
     can_move_right = True
     can_move_down = True
 
-    blue_block = pygame.image.load("./image/block/blue.jpeg")
-    red_block = pygame.image.load("./image/block/red.jpeg")
-    purple_block = pygame.image.load("./image/block/purple.jpeg")
-    orange_block = pygame.image.load("./image/block/orange.jpeg")
-    magenta_block = pygame.image.load("./image/block/magenta.jpeg")
-    green_block = pygame.image.load("./image/block/green.jpeg")
-    gray_block = pygame.image.load("./image/block/gray.jpeg")
+    blue_block = pg.image.load("./image/block/blue.jpeg")
+    red_block = pg.image.load("./image/block/red.jpeg")
+    purple_block = pg.image.load("./image/block/purple.jpeg")
+    orange_block = pg.image.load("./image/block/orange.jpeg")
+    magenta_block = pg.image.load("./image/block/magenta.jpeg")
+    green_block = pg.image.load("./image/block/green.jpeg")
+    gray_block = pg.image.load("./image/block/gray.jpeg")
 
     finalized_sound_path = "./sound/block.wav"
     clearline_sound_path = "./sound/clearline.wav"
@@ -30,25 +30,25 @@ class Tetris:
         self.block = Block()
 
     def start(self):
-        pygame.init()
-        self.screen = pygame.display.set_mode((700, 750))
-        pygame.display.set_caption(self.GAME_TITLE)
+        pg.init()
+        self.screen = pg.display.set_mode((700, 750))
+        pg.display.set_caption(self.GAME_TITLE)
         while (True):
             self.draw()
-            pygame.display.update()
+            pg.display.update()
             if self.can_move_down or self.block.y <= round(self.block.y):
                 self.block.y += 0.003
             else:
-                sound = pygame.mixer.Sound(self.finalized_sound_path)
+                sound = pg.mixer.Sound(self.finalized_sound_path)
                 sound.play()
                 self.finalize_block()
             # key input
-            pressed_keys = pygame.key.get_pressed()
+            pressed_keys = pg.key.get_pressed()
             if pressed_keys[K_DOWN] and self.can_move_down:
                 self.block.y += 0.05
-            for event in pygame.event.get():
+            for event in pg.event.get():
                 if event.type == QUIT:
-                    pygame.quit()
+                    pg.quit()
                     sys.exit()
                 if event.type == KEYDOWN:
                     if event.key == K_SPACE:
@@ -70,7 +70,7 @@ class Tetris:
             self.check_block()
             full_lines = self.board.get_full_lines()
             if len(full_lines) > 0:
-                sound = pygame.mixer.Sound(self.clearline_sound_path)
+                sound = pg.mixer.Sound(self.clearline_sound_path)
                 sound.play()
                 self.board.clear_line(full_lines)
 
@@ -94,9 +94,8 @@ class Tetris:
                         self.block.x = 1 - x
                     if right_x >= self.board.h - 1:
                         self.block.x = self.board.h - 2 - x
-                    left = self.board.map[math.floor(self.block.y) + y][self.block.x + x - 1]
-                    right = self.board.map[math.floor(self.block.y) + y][self.block.x + x + 1]
-                    top = self.board.map[math.floor(self.block.y) + y - 1][self.block.x + x]
+                    left = self.board.map[round(self.block.y) + y][self.block.x + x - 1]
+                    right = self.board.map[round(self.block.y) + y][self.block.x + x + 1]
                     bottom = self.board.map[math.floor(self.block.y) + y + 1][self.block.x + x]
                     if left != 0: self.can_move_left = False
                     if right != 0: self.can_move_right = False
@@ -106,7 +105,7 @@ class Tetris:
     def finalize_block(self):
         for x in range(5):
             for y in range(5):
-                val = copy.deepcopy(self.block.map[y][x])
+                val = cp.deepcopy(self.block.map[y][x])
                 if val != 0:
                     self.board.map[round(self.block.y) + y][self.block.x + x] = val
         self.block.make()
@@ -128,7 +127,7 @@ class Tetris:
                     elif val == 5: image = self.purple_block
                     elif val == 6: image = self.blue_block
                     self.screen.blit(image, (block_side_length * j + startX, block_side_length * i + startY))
-                    pygame.draw.rect(self.screen, (0, 0, 0), Rect(block_side_length * j + startX, block_side_length * i + startY, block_side_length, block_side_length), 2)
+                    pg.draw.rect(self.screen, (0, 0, 0), Rect(block_side_length * j + startX, block_side_length * i + startY, block_side_length, block_side_length), 2)
         # draw block
         for i in range(5):
             for j in range(5):
@@ -144,7 +143,7 @@ class Tetris:
                             block_side_length
                         )
                     )
-                    pygame.draw.rect(self.screen, (0, 0, 0), Rect(
+                    pg.draw.rect(self.screen, (0, 0, 0), Rect(
                             block_side_length * (self.block.x + j) + startX,
                             block_side_length * (self.block.y + i) + startY,
                             block_side_length,
@@ -158,7 +157,7 @@ class Tetris:
             for j in range(5):
                 val = self.block.map[i][j]
                 if val != 0:
-                    pygame.draw.rect(self.screen, (255, 255, 255), Rect(
+                    pg.draw.rect(self.screen, (255, 255, 255), Rect(
                             block_side_length * j + startX,
                             block_side_length * i + startY,
                             block_side_length,
@@ -166,14 +165,14 @@ class Tetris:
                         )
                     )
                 elif val == 0:
-                    pygame.draw.rect(self.screen, (100, 100, 100), Rect(
+                    pg.draw.rect(self.screen, (100, 100, 100), Rect(
                             block_side_length * j + startX,
                             block_side_length * i + startY,
                             block_side_length,
                             block_side_length
                         )
                     )
-                pygame.draw.rect(self.screen, (0, 0, 0), Rect(
+                pg.draw.rect(self.screen, (0, 0, 0), Rect(
                         block_side_length * j + startX,
                         block_side_length * i + startY,
                         block_side_length,

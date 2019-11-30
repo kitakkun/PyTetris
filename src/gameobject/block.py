@@ -1,8 +1,10 @@
-import random, copy, numpy
+import random
+import numpy as np
+import copy as cp
 
 class Block:
 
-    EMPTY_BLOCK = numpy.array([
+    EMPTY_BLOCK = np.array([
         [0, 0, 0, 0, 0],
         [0, 0, 0, 0, 0],
         [0, 0, 0, 0, 0],
@@ -10,7 +12,7 @@ class Block:
         [0, 0, 0, 0, 0]
     ])
 
-    SQUARE_BLOCK = numpy.array([
+    SQUARE_BLOCK = np.array([
         [0, 0, 0, 0, 0],
         [0, 0, 1, 1, 0],
         [0, 0, 1, 1, 0],
@@ -18,7 +20,7 @@ class Block:
         [0, 0, 0, 0, 0]
     ])
 
-    BAR_BLOCK = numpy.array([
+    BAR_BLOCK = np.array([
         [0, 0, 1, 0, 0],
         [0, 0, 1, 0, 0],
         [0, 0, 1, 0, 0],
@@ -26,7 +28,7 @@ class Block:
         [0, 0, 0, 0, 0]
     ])
 
-    L_BLOCK = numpy.array([
+    L_BLOCK = np.array([
         [0, 0, 0, 0, 0],
         [0, 0, 1, 0, 0],
         [0, 0, 1, 0, 0],
@@ -34,7 +36,7 @@ class Block:
         [0, 0, 0, 0, 0]
     ])
 
-    L_INVERT_BLOCK = numpy.array([
+    L_INVERT_BLOCK = np.array([
         [0, 0, 0, 0, 0],
         [0, 0, 1, 0, 0],
         [0, 0, 1, 0, 0],
@@ -42,7 +44,7 @@ class Block:
         [0, 0, 0, 0, 0]
     ])
 
-    Z_BLOCK = numpy.array([
+    Z_BLOCK = np.array([
         [0, 0, 0, 0, 0],
         [0, 1, 1, 0, 0],
         [0, 0, 1, 1, 0],
@@ -50,7 +52,7 @@ class Block:
         [0, 0, 0, 0, 0]
     ])
 
-    Z_INVERT_BLOCK = numpy.array([
+    Z_INVERT_BLOCK = np.array([
         [0, 0, 0, 0, 0],
         [0, 0, 1, 1, 0],
         [0, 1, 1, 0, 0],
@@ -58,7 +60,7 @@ class Block:
         [0, 0, 0, 0, 0]
     ])
 
-    UNEVEN_BLOCK = numpy.array([
+    UNEVEN_BLOCK = np.array([
         [0, 0, 0, 0, 0],
         [0, 0, 1, 0, 0],
         [0, 1, 1, 1, 0],
@@ -97,7 +99,7 @@ class Block:
         color = random.randint(2, 6)
         tmp = tmp * color
         # assign value into self.map
-        self.map = copy.deepcopy(tmp.tolist())
+        self.map = cp.deepcopy(tmp.tolist())
         # rotate block some times
         rotate = random.randint(0, 3)
         for _ in range(rotate):
@@ -108,12 +110,12 @@ class Block:
             self.map = self.get_rotated_map()
 
     def get_rotated_map(self):
-        tmp = numpy.array(self.map)
+        tmp = np.array(self.map)
         for _ in range(3):
-            tmp = numpy.rot90(tmp)
+            tmp = np.rot90(tmp)
         tmp = tmp.tolist()
         return tmp
 
     # reset block
     def clear(self):
-        self.map = copy.deepcopy(self.EMPTY_BLOCK)
+        self.map = cp.deepcopy(self.EMPTY_BLOCK)
