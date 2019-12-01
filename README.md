@@ -18,8 +18,11 @@ After downloaded the files, open Terminal(macOS, Linux) or Command Prompt, then 
 
 ## Feature
 Press **space bar** to **rotate Block**.
+
 Press **left-arrow key** to **move Block to the left**.
+
 Press **right-arrow key** to **move Block to the right**.
+
 Press **down-arrow key** to **make the speed of Block's falling faster**(If you also press shift key simultaneously, Block will fall to the bottom in a moment).
 
 ## Caution
