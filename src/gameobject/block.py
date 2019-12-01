@@ -104,6 +104,13 @@ class Block:
         rotate = random.randint(0, 3)
         for _ in range(rotate):
             self.rotate()
+        # adjust y position
+        min_y = 4
+        for x in range(5):
+            for y in range(5):
+                if self.map[y][x] != 0:
+                    min_y = min(min_y, y)
+        self.y = - min_y
 
     def rotate(self):
         if self.can_rotate:

@@ -5,7 +5,7 @@ import pygame as pg
 import copy as cp
 from pygame.locals import *
 import math
-import simpleaudio
+import numpy as np
 
 class Tetris:
 
@@ -36,10 +36,13 @@ class Tetris:
     finalized_sound_path = "./sound/block.wav"
     clearline_sound_path = "./sound/clearline.wav"
 
+
     score = 0
+    fall_speed = 0.002
 
     def __init__(self):
         self.board = Board()
+        self.blocks = [Block() for _ in range(3)]
         self.block = Block()
 
     def start(self):
@@ -50,11 +53,12 @@ class Tetris:
             self.draw()
             pg.display.update()
             if self.can_move_down or self.block.y <= round(self.block.y):
-                self.block.y += 0.003
+                self.block.y += self.fall_speed
             else:
                 sound = pg.mixer.Sound(self.finalized_sound_path)
                 sound.play()
                 self.finalize_block()
+                self.fall_speed += 0.0001
             # key input
             pressed_keys = pg.key.get_pressed()
             if pressed_keys[K_DOWN] and self.can_move_down:
@@ -80,18 +84,24 @@ class Tetris:
                         self.block.x -= 1
                     if event.key == K_RIGHT and self.can_move_right:
                         self.block.x += 1
+                    if event.key == K_DOWN and self.can_move_down and pressed_keys[K_LSHIFT]:
+                        self.block.y = self.calc_fall_point()
             self.check_block()
             full_lines = self.board.get_full_lines()
             if len(full_lines) > 0:
                 self.score += pow(2, len(full_lines)) * 100
-                print(self.score)
                 sound = pg.mixer.Sound(self.clearline_sound_path)
+                sound.set_volume(0.1)
                 sound.play()
                 self.board.clear_line(full_lines)
 
 
     def stop(self):
-        pass
+        while True:
+            for event in pg.event.get():
+                if event.type == QUIT:
+                    pg.quit()
+                    sys.exit()
 
     # prevent blocks from going away from game field.
     def check_block(self):
@@ -123,7 +133,13 @@ class Tetris:
                 val = cp.deepcopy(self.block.map[y][x])
                 if val != 0:
                     self.board.map[round(self.block.y) + y][self.block.x + x] = val
-        self.block.make()
+        self.block = self.blocks[0]
+        del(self.blocks[0])
+        self.blocks.append(Block())
+        for x in range(5):
+            for y in range(5):
+                if self.block.map[y][x] != 0 and self.board.map[self.block.y + y][self.block.x + x] != 0:
+                    self.stop()
 
     def draw(self):
         block_side_length = 30
@@ -170,6 +186,31 @@ class Tetris:
                     elif val == 6: image = self.blue_block
                     self.screen.blit(image, (block_side_length * j + startX, block_side_length * i + startY))
                     pg.draw.rect(self.screen, (0, 0, 0), Rect(block_side_length * j + startX, block_side_length * i + startY, block_side_length, block_side_length), 2)
+        # draw block's fall-point
+        f_y = self.calc_fall_point()
+        for x in range(5):
+            for y in range(5):
+                val = self.block.map[y][x]
+                if val != 0:
+                    if val == 2: image = self.red_block.copy()
+                    elif val == 3: image = self.green_block.copy()
+                    elif val == 4: image = self.magenta_block.copy()
+                    elif val == 5: image = self.purple_block.copy()
+                    elif val == 6: image = self.blue_block.copy()
+                    image.convert()
+                    image.set_alpha(80)
+                    self.screen.blit(image, (block_side_length * (self.block.x + x) + startX,block_side_length * (f_y + y) + startY,
+                    block_side_length,
+                    block_side_length
+                    )
+                    )
+                    pg.draw.rect(self.screen, (0, 0, 0), Rect(
+                    block_side_length * (self.block.x + x) + startX,
+                    block_side_length * (f_y + y) + startY,
+                    block_side_length,
+                    block_side_length
+                    )
+                    , 2)
         # draw block
         for i in range(5):
             for j in range(5):
@@ -192,6 +233,49 @@ class Tetris:
                             block_side_length
                         )
                     , 2)
+        # draw future-coming blocks
+        for block in self.blocks:
+            for x in range(5):
+                for y in range(5):
+                    val = block.map[y][x]
+                    if val != 0:
+                        if val == 2: image = self.red_block
+                        elif val == 3: image = self.green_block
+                        elif val == 4: image = self.magenta_block
+                        elif val == 5: image = self.purple_block
+                        elif val == 6: image = self.blue_block
+                        self.screen.blit(image,(
+                            block_side_length * x + 500,
+                            block_side_length * y + 200 + y + self.blocks.index(block) * block_side_length * 6,
+                            block_side_length,
+                            block_side_length
+                            )
+                        )
+                        pg.draw.rect(self.screen, (0, 0, 0), Rect(
+                            block_side_length * x + 500,
+                            block_side_length * y + 200 + y + self.blocks.index(block) * block_side_length * 6,
+                            block_side_length,
+                            block_side_length
+                            )
+                        , 2)
+
+
+
+    def calc_fall_point(self):
+        block = cp.deepcopy(self.block)
+        block.y = round(block.y)
+        exe = True
+        block.y -= 1
+        while exe:
+            block.y += 1
+            for y in range(5):
+                for x in range(5):
+                    val = block.map[y][x]
+                    if val != 0:
+                        val2 = self.board.map[block.y+y+1][block.x+x]
+                        if val2 != 0:
+                            exe = False
+        return block.y
 
 
 def main():
