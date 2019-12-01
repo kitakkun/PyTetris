@@ -14,27 +14,27 @@ class Tetris:
     can_move_right = True
     can_move_down = True
 
-    blue_block = pg.image.load("./image/block/blue.jpeg")
-    red_block = pg.image.load("./image/block/red.jpeg")
-    purple_block = pg.image.load("./image/block/purple.jpeg")
-    orange_block = pg.image.load("./image/block/orange.jpeg")
-    magenta_block = pg.image.load("./image/block/magenta.jpeg")
-    green_block = pg.image.load("./image/block/green.jpeg")
-    gray_block = pg.image.load("./image/block/gray.jpeg")
+    blue_block = pg.image.load("image/block/blue.jpeg")
+    red_block = pg.image.load("image/block/red.jpeg")
+    purple_block = pg.image.load("image/block/purple.jpeg")
+    orange_block = pg.image.load("image/block/orange.jpeg")
+    magenta_block = pg.image.load("image/block/magenta.jpeg")
+    green_block = pg.image.load("image/block/green.jpeg")
+    gray_block = pg.image.load("image/block/gray.jpeg")
 
-    letter_zero = pg.image.load('./image/letter/zero.png')
-    letter_one = pg.image.load('./image/letter/one.png')
-    letter_two = pg.image.load('./image/letter/two.png')
-    letter_three = pg.image.load('./image/letter/three.png')
-    letter_four = pg.image.load('./image/letter/four.png')
-    letter_five = pg.image.load('./image/letter/five.png')
-    letter_six = pg.image.load('./image/letter/six.png')
-    letter_seven = pg.image.load('./image/letter/seven.png')
-    letter_eight = pg.image.load('./image/letter/eight.png')
-    letter_nine = pg.image.load('./image/letter/nine.png')
+    letter_zero = pg.image.load('image/letter/zero.png')
+    letter_one = pg.image.load('image/letter/one.png')
+    letter_two = pg.image.load('image/letter/two.png')
+    letter_three = pg.image.load('image/letter/three.png')
+    letter_four = pg.image.load('image/letter/four.png')
+    letter_five = pg.image.load('image/letter/five.png')
+    letter_six = pg.image.load('image/letter/six.png')
+    letter_seven = pg.image.load('image/letter/seven.png')
+    letter_eight = pg.image.load('image/letter/eight.png')
+    letter_nine = pg.image.load('image/letter/nine.png')
 
-    finalized_sound_path = "./sound/block.wav"
-    clearline_sound_path = "./sound/clearline.wav"
+    finalized_sound_path = "sound/block.wav"
+    clearline_sound_path = "sound/clearline.wav"
 
 
     score = 0
@@ -49,9 +49,9 @@ class Tetris:
         pg.init()
         self.screen = pg.display.set_mode((700, 750))
         pg.display.set_caption(self.GAME_TITLE)
+        self.font = pg.font.Font("font/Kitakkun_font.ttf", 45)
         while (True):
             self.draw()
-            pg.display.update()
             if self.can_move_down or self.block.y <= round(self.block.y):
                 self.block.y += self.fall_speed
             else:
@@ -94,6 +94,7 @@ class Tetris:
                 sound.set_volume(0.1)
                 sound.play()
                 self.board.clear_line(full_lines)
+            pg.display.update()
 
 
     def stop(self):
@@ -147,8 +148,9 @@ class Tetris:
         startY = 40
         self.screen.fill((0, 0, 0))
         # draw score
+        text = self.font.render("Score:", True, (255,255,255))
+        self.screen.blit(text, (430, 100))
         score = list(str(self.score))
-        pg.draw.rect(self.screen, (0, 0, 0), Rect(500, 80, 30 * len(score), 30))
         i = 0
         for c in score:
             if c == "0":
@@ -171,7 +173,7 @@ class Tetris:
                 image = self.letter_eight
             elif c == "9":
                 image = self.letter_nine
-            self.screen.blit(image, (500 + i * 30, 80))
+            self.screen.blit(image, (540 + i * 30, 102))
             i += 1
         # draw board
         for i in range(self.board.v):
@@ -282,5 +284,5 @@ def main():
     tetris = Tetris()
     tetris.start()
 
-if __name__ == '__main__':
+if __name__ in ('__main__', 'PyTetris__main__'):
     main()
